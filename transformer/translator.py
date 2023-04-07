@@ -9,18 +9,21 @@ class Translator(tf.Module):
         super(Translator, self).__init__()
 
     def __call__(self, sentence, max_length=MAX_TOKENS):
-        # The input sentence is Portuguese, hence adding the `[START]` and `[END]` tokens.
-        assert isinstance(sentence, tf.Tensor)
+        # The input sentence is English, hence adding the `[START]` and `[END]` tokens.
+        if isinstance(sentence, str):
+            sentence = tf.constant([sentence])
         if len(sentence.shape) == 0:
             sentence = sentence[tf.newaxis]
 
-        sentence = self.tokenizers.uk.tokenize(sentence).to_tensor()
+        with tf.device('/cpu:0'):
+            sentence = self.tokenizers.en.tokenize(sentence).to_tensor()
 
         encoder_input = sentence
 
-        # As the output language is English, initialize the output with the
-        # English `[START]` token.
-        start_end = self.tokenizers.en.tokenize([''])[0]
+        # As the output language is Ukr, initialize the output with the
+        # Ukr `[START]` token.
+        with tf.device('/cpu:0'):
+            start_end = self.tokenizers.uk.tokenize(tf.constant(['']))[0]
         start = start_end[0][tf.newaxis]
         end = start_end[1][tf.newaxis]
 
@@ -31,7 +34,7 @@ class Translator(tf.Module):
 
         for i in tf.range(max_length):
             output = tf.transpose(output_array.stack())
-            predictions = self.transformer([encoder_input, output], training=False)
+            predictions = self.transformer((encoder_input, output), training=False)
 
             # Select the last token from the `seq_len` dimension.
             predictions = predictions[:, -1:, :]  # Shape `(batch_size, 1, vocab_size)`.
@@ -47,14 +50,14 @@ class Translator(tf.Module):
 
         output = tf.transpose(output_array.stack())
         # The output shape is `(1, tokens)`.
-        text = tokenizers.en.detokenize(output)[0]  # Shape: `()`.
+        text = tokenizers.uk.detokenize(output)[0]  # Shape: `()`.
 
-        tokens = tokenizers.en.lookup(output)[0]
+        tokens = tokenizers.uk.lookup(output)[0]
 
         # `tf.function` prevents us from using the attention_weights that were
         # calculated on the last iteration of the loop.
         # So, recalculate them outside the loop.
-        self.transformer([encoder_input, output[:,:-1]], training=False)
-        attention_weights = self.transformer.decoder.last_attn_scores
+        self.transformer((encoder_input, output[:, :-1]), training=False)
+        # attention_weights = self.transformer.decoder.last_attn_scores
 
-        return text, tokens, attention_weights
+        return text, tokens#, attention_weights

@@ -5,7 +5,7 @@ from util import masked_loss, masked_accuracy, BUFFER_SIZE, BATCH_SIZE, d_model
 from transformer_init import transformer
 
 
-learning_rate = CustomSchedule(d_model)
+learning_rate = CustomSchedule(d_model, stopped_at=20)
 optimizer = tf.keras.optimizers.Adam(learning_rate, beta_1=0.9, beta_2=0.98, epsilon=1e-9)
 transformer.compile(
     loss=masked_loss,

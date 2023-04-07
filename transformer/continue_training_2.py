@@ -66,10 +66,13 @@ for epoch in range(epochs):
 
     # Iterate over the dataset batches
     for step, (train_batchX, train_batchY) in enumerate(train_batches):
+        encoder_input, decoder_input = train_batchX
+        decoder_output = train_batchY
+
         # Define the encoder and decoder inputs, and the decoder output
-        encoder_input = train_batchX[:, 1:]
-        decoder_input = train_batchY[:, :-1]
-        decoder_output = train_batchY[:, 1:]
+        # encoder_input = train_batchX[:, 1:]
+        # decoder_input = train_batchY[:, :-1]
+        # decoder_output = train_batchY[:, 1:]
 
         train_step(encoder_input, decoder_input, decoder_output)
 

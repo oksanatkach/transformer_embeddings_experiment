@@ -6,7 +6,7 @@ from util import d_model
 import pickle
 import keras.backend as K
 
-filepath = '../model_after_20_epochs.ckpt'
+filepath = 'model_after_20_epochs.ckpt'
 # load the model
 transformer = tf.keras.models.load_model(filepath, custom_objects={'masked_accuracy': masked_accuracy,
                                                                    'masked_loss': masked_loss,

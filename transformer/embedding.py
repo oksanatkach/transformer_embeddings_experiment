@@ -30,8 +30,12 @@ class PositionalEmbedding(tf.keras.layers.Layer):
 
     def call(self, x):
         length = tf.shape(x)[1]
-        x = self.embedding(x)
-        # This factor sets the relative scale of the embedding and positonal_encoding.
+        try:
+            x = self.embedding(x)
+        except:
+            print(x)
+
+        # This factor sets the relative scale of the embedding and positional_encoding.
         x *= tf.math.sqrt(tf.cast(self.d_model, tf.float32))
         x = x + self.pos_encoding[tf.newaxis, :length, :]
         return x

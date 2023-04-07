@@ -32,8 +32,8 @@ class Transformer(tf.keras.Model):
         logits = self.final_layer(x)  # (batch_size, target_len, target_vocab_size)
 
         try:
-          # Drop the keras mask, so it doesn't scale the losses/metrics.
-          # b/250038731
+            # Drop the keras mask, so it doesn't scale the losses/metrics.
+            # b/250038731
             del logits._keras_mask
         except AttributeError:
             pass

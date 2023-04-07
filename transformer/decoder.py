@@ -61,7 +61,7 @@ class Decoder(tf.keras.layers.Layer):
         x = self.dropout(x)
 
         for i in range(self.num_layers):
-            x  = self.dec_layers[i](x, context)
+            x = self.dec_layers[i](x, context)
 
         self.last_attn_scores = self.dec_layers[-1].last_attn_scores
 

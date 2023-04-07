@@ -10,7 +10,7 @@ d_model = 128
 dff = 512
 num_heads = 8
 dropout_rate = 0.1
-tokenizer_path = 'ted_hrlr_translate_uk_en_converter'
+tokenizer_path = '../ted_hrlr_translate_uk_en_converter'
 tokenizers = tf.saved_model.load(tokenizer_path)
 
 

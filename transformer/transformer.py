@@ -40,3 +40,8 @@ class Transformer(tf.keras.Model):
 
         # Return the final output and the attention weights.
         return logits
+
+    def get_final_vectors(self, context, x):
+        context = self.encoder(context)
+        x = self.decoder(x, context)
+        return context, x

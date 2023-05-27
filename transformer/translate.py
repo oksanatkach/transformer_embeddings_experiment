@@ -1,6 +1,5 @@
 from translator import Translator
 from util import tokenizers
-import tensorflow as tf
 
 
 def print_translation(sentence, tokens, ground_truth):
